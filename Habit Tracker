@@ -1,0 +1,32 @@
+import json
+from datetime import datetime
+
+def record_habit(habit_name):
+    date = datetime.today().strftime('%Y-%m-%d')
+    try:
+        with open("habits.json", "r") as file:
+            habits = json.load(file)
+    except FileNotFoundError:
+        habits = {}
+
+    if habit_name in habits:
+        habits[habit_name].append(date)
+    else:
+        habits[habit_name] = [date]
+
+    with open("habits.json", "w") as file:
+        json.dump(habits, file)
+    print(f"Habit '{habit_name}' recorded for today.")
+
+def view_habits():
+    try:
+        with open("habits.json", "r") as file:
+            habits = json.load(file)
+            for habit, dates in habits.items():
+                print(f"{habit}: {len(dates)} times")
+    except FileNotFoundError:
+        print("No habits recorded.")
+
+# Example Usage
+record_habit("Exercise")
+view_habits()
